@@ -1,0 +1,19 @@
+<% log ||= "" %>
+<% if log.present? %>
+  <table class="table-bordered table-striped table-hover " style="width: 100%;margin:0 auto">
+    <tr>
+      <th>操作时间</th>
+      <th>操作人</th>
+      <th>操作</th>
+    </tr>
+    <% log_rs(log).each do |l| %>
+      <tr>
+        <td class="tc"><%= l.attr("操作时间") %></td>
+        <td><%= l.attr("操作人") %></td>
+        <td><%= l.attr("事件") %></td>
+      </tr>
+    <% end -%>
+  </table>
+<% else %>
+  <p>暂无审核记录</p>
+<% end %>

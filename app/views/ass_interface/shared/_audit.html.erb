@@ -1,0 +1,66 @@
+<!-- 
+  审核的对象需要有status和log字段
+-->
+<!-- 参数：
+  obj: 待审核的对象，不能为空
+  back_url: 审核完成后返回的路径，不能为空
+  pass_value_value: 通过的值，默认12
+  deny_value_value: 不通过的值，默认-1
+  pass_title: 通过按钮的标题，默认审核通过
+  deny_title: 不通过按钮的标题，默认不通过
+-->
+<% pass_value ||= 12 %>
+<% deny_value ||= -1 %>
+<% pass_title ||= "审核通过" %>
+<% deny_title ||= "不通过" %>
+<% obj ||= nil %>
+<% back_url ||= nil %>
+
+<% if obj.blank? %>
+  <p class="red">请传入obj（待审核的对象）参数</p>
+<% elsif back_url.blank? %>
+  <p class="red">请传入back_url（审核完成后返回的路径）参数</p>
+<% else %>
+  <div class="tc mt12">
+    <%= link_to_void pass_title, onclick: "dota_audit(#{pass_value}, this)", :class => "btn btn-success" %>
+    <%= link_to_void deny_title, onclick: "dota_audit(#{deny_value}, this)", :class => "btn btn-warning" %>
+  </div>
+
+  <script type="text/javascript">
+    function dota_audit(status, link){
+      $("#status").val(status);
+      $("#info").val($(link).text());
+      if (status < 0){
+        var d = dialog({
+          title: '请填写不通过原因',
+          content: '<textarea id="tem_reason" ></textarea>',
+          okValue: "确定",
+          ok: function () {
+            $("#reason").val($("#tem_reason").val());
+            $("#info").val($("#info").val() + "。原因："+ $("#reason").val());
+            $("#audit_form").submit();
+          return false;
+          },
+          cancelValue: '取消',
+          cancel: function () {},
+          quickClose: true
+        });
+        d.show();
+      }else{
+        if(window.confirm("你确定吗？")){
+          $("#audit_form").submit();
+        }
+      }
+    }
+  </script>
+
+  <%= form_tag ancient_audit_path, :id => "audit_form" do %>
+    <%= hidden_field_tag 'back', back_url %>
+    <%= hidden_field_tag 'id', obj.id %>
+    <%= hidden_field_tag 'clazz', obj.class.to_s %>
+    <%= text_area_tag 'reason', '', :class => "hide" %>
+    <%= hidden_field_tag 'info' %>
+    <%= hidden_field_tag 'status' %>
+  <% end -%>
+<% end %>
+

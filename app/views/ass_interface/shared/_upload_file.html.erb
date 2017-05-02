@@ -1,0 +1,11 @@
+<div id="attachment_fields">
+  <%= f.simple_fields_for :attachments do |form|  %>
+    <% if !obj.new_record? && obj.attachments.present? %>
+      <%= link_to image_tag(form.object.file_url, width: "50", height: "50"), form.object.file_url, target: '_blank' %>
+    <% end %>
+    <%= form.input_field :file %>
+    <%= form.link_to_remove "删除" %>
+  <% end %>
+  <br/>
+  <%= f.link_to_add "添加", :attachments, :class => "btn btn-small btn-primary" %>
+</div>

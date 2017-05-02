@@ -1,0 +1,8 @@
+<% html ||= "" %>
+<% btn_label ||= nil %>
+<div class="form-actions tc">
+  <%= hidden_field_tag 'back', params[:back] %>
+  <%= f.button (btn_label || :submit), :class => "btn-primary btn-small mt10 w50" %>
+  <%= link_to "返回", params[:back], class: 'btn btn-small mt10 w50' if params[:back].present? %>
+  <%= html.html_safe %>
+</div>
